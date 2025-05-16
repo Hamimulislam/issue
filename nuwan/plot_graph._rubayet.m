@@ -18,7 +18,7 @@ grid on;
 ylim([0, max(stress+.5)]);  % Set the lower limit to 0 and upper limit to the maximum stress
 xlim([0,.5]);
 % Find the linear elastic region
-linear_range_start = -0.000005; % Adjust the starting point of the linear range
+linear_range_start = 0.00; % Adjust the starting point of the linear range
 linear_range_end = 0.035;   % Adjust the ending point of the linear range
 
 % Find the corresponding indices for the linear range
