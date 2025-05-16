@@ -1,5 +1,7 @@
-clear all;clc;  % Read data from the LAMMPS text file, skipping the header line
-data = dlmread('result.txt', ' ', 1, 0);
+% Graph from Rubayet vai
+clear all;
+clc;  
+data = dlmread('result.txt', ' ', 1, 0); % Read data from the LAMMPS text file, skipping the header line
 
 % Extract stress and strain values
 strain = data(:, 1);
