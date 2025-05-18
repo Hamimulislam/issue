@@ -128,4 +128,4 @@ fix def_print all print 25 "${p1} ${p2} ${p3} ${p4}" file result.txt screen no
 
 run 40000 
 
-print "Simulation Done Successfully"
+print "Simulation Done"
