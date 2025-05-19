@@ -1,0 +1,75 @@
+#single-single 10% H Model
+####distance-amstrongs,mass-gram/mole
+units		metal 
+boundary	s s p 
+atom_style	atomic 
+
+neighbor 0.3 bin
+neigh_modify delay 5
+
+####to print values from thermo command
+log 		logfile.txt 
+####dimensions of simulation box-this dimension should generate 48000 Ni atoms
+
+lattice fcc 3.52
+region 1 block 0 140.8 0 105.6 0 35.2 units box 
+
+#### region 6 is where H is filled randomly(size=10*4*10 unit cells)
+region 6 block 42.24 77.44 45.76 59.84 0 35.2 units box 
+
+create_box 6 1
+####filling Ni atoms
+
+create_atoms 1 region 1 basis 1 1 basis 2 1 basis 3 1 basis 4 1 units box
+####filling H atoms randomly(for 10% H concentration number of H atoms is approximately 32)
+create_atoms 6 random 32 7899 6 units box
+####this should create 5 regions
+
+region 2 block INF 45.76 52.8 98.56 INF INF units box
+group leftupper region 2
+region 3 block INF 45.76 7.04 52.8 INF INF units box
+group leftlower region 3
+region 4 block INF INF 0 7.04 INF INF units box
+group lower region 4
+region 5 block INF INF 98.56 INF INF INF units box
+group upper region 5
+
+####this should assign 5 atom types to 5 regions
+
+set group leftupper type 2
+set group leftlower type 3
+set group lower type 4
+set group upper type 5
+
+####no need to specify mass as we are using eam/alloy potential
+
+pair_style	hybrid/overlay eam/alloy eam/alloy
+pair_coeff 	* * eam/alloy 1 NiAlH_jea.eam.alloy Ni Ni Ni Ni Ni NULL
+pair_coeff 	* * eam/alloy 2 NiAlH_jea.eam.alloy Ni Ni Ni Ni Ni H 
+
+####energy minimization
+minimize 1e-7 1e-9 10000 10000
+timestep  0.001
+
+####crack formation
+
+group boundary union upper lower 
+group mobile subtract all boundary
+
+###lets move the atoms using velocity command
+velocity mobile create 298 887723 dist gaussian mom yes rot yes
+velocity upper set 0.0 0.3 0.0
+velocity mobile ramp vy 0.0 0.3 y 7.04 98.56 sum yes 
+
+###Lets integrate toi update position and momenta of particles using fixes
+fix 1 all nve 
+fix 2 boundary setforce NULL 0.0 0.0
+neigh_modify exclude type 2 3
+dump dump_1 all custom 500 dump.min id type x y z ix iy iz vx vy vz
+thermo 100 
+thermo_style  custom step time temp pe etotal press vol
+run 40000
+unfix 1
+unfix 2
+undump dump_1
+
