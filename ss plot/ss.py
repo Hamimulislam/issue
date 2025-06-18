@@ -11,10 +11,10 @@ stress = data[:, 1]
 
 # Create plot
 plt.figure(figsize=(8, 6))
-plt.plot(strain, stress, color='#1f77b4', linewidth=2, label='Sample 01 (300 K)')
+plt.plot(strain, stress, color='#1f77b4', linewidth=2, label='Sample 01')
 
 # Labels and title with bold styling
-plt.title('Stress–Strain Curve of XT at 300 K', fontsize=16, fontweight='bold', pad=15)
+plt.title('Stress–Strain Curve', fontsize=16, fontweight='bold', pad=15)
 plt.xlabel('Strain', fontsize=14, fontweight='bold', labelpad=10)
 plt.ylabel('Stress (GPa)', fontsize=14, fontweight='bold', labelpad=10)
 
@@ -33,5 +33,5 @@ plt.legend(frameon=False, fontsize=13)
 
 # Save and show
 plt.tight_layout()
-plt.savefig('stress_strain_curve.png', dpi=1200, bbox_inches='tight', facecolor='white')
+plt.savefig('ss_curve.png', dpi=1200, bbox_inches='tight', facecolor='white')
 plt.show()
